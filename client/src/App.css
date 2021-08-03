@@ -1,0 +1,37 @@
+
+.App {
+  text-align: center;
+}
+
+
+
+ /* Survey and Forms page */
+
+iframe {
+  margin: 20px;
+}
+
+
+
+ /* Professor List page */
+
+.professors, .dashboard {
+  padding: 25px;
+}
+
+.updateData {
+  background-color: '#FFD200';
+}
+
+.updateBtnDiv {
+  margin: 25px;
+}
+
+.sortBtn {
+  margin-left: 20px;
+  display: inline-block;
+}
+
+.chip {
+  background-color: #0064A4;
+}
