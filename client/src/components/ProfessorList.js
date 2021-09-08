@@ -1,15 +1,14 @@
 import React from "react";
-import { compose } from 'redux';
-import { connect, useSelector } from 'react-redux';
-import { useFirestoreConnect, withFirestore, isLoaded, isEmpty } from 'react-redux-firebase'
+import { useSelector } from 'react-redux';
+import { useFirestoreConnect } from 'react-redux-firebase'
 
 
 import '../App.css';
 
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { styled, makeStyles, withStyles} from '@material-ui/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
+import TableCell, { tableCellClasses } from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -25,38 +24,33 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Chip from '@material-ui/core/Chip';
 // -------------
 
+
 const { useEffect, useState } = React;
 
 
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: 'black',
+    color: 'white',
+    padding: 20
+
   },
-  body: {
+  [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+
   },
-}))(TableCell);
+}));
 
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: '#ebebeb',
   },
-}))(TableRow);
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
-// function createData(faculty, calories, fat, carbs, protein) {
-//   return { faculty, calories, fat, carbs, protein };
-// }
-
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-// ];
 
 const useStyles = makeStyles({
   table: {
@@ -65,24 +59,22 @@ const useStyles = makeStyles({
 });
 
 
-const BootstrapButton = withStyles({
-  root: {
+const BootstrapButton = styled(Button)(() => ({
+  '&:nth-of-type(1)': {
+    backgroundColor: '#FFD200',
+    color: 'black',
     boxShadow: 'box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;',
     textTransform: 'none',
     fontSize: 16,
     padding: '6px 12px',
     lineHeight: 1.5,
-    color: '#000000',
-    backgroundColor: '#FFD200',
-    '&:hover': {
+        '&:hover': {
       backgroundColor: '#FFD200',
       borderColor: '#0062cc',
       boxShadow: 'box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;',
     },
-
-  },
-})(Button);
-
+  }
+}));
 
 const StyledMenu = withStyles({
   paper: {
@@ -103,7 +95,6 @@ const StyledMenu = withStyles({
     {...props}
   />
 ));
-
 
 
 
@@ -171,12 +162,10 @@ export default function ProfessorList() {
     // Handle sorting for Course TYPE
     setAnchorEl(null);
     const { myValue } = event.currentTarget.dataset;
-    console.log(myValue)
     
     setSortTypeVal(myValue);
     setSortCheck(true);
 
-    console.log(data);
     const sortedList = sortHelper(myValue, data, 't')
     setData(sortedList);
   };
@@ -185,7 +174,6 @@ export default function ProfessorList() {
     // Handle sorting for Course NAME
     setAnchorEl1(null);
     const { myValue } = event.currentTarget.dataset;
-    console.log(myValue)
     
     setSortNameVal(myValue);
     setSortCheck(true);
@@ -210,7 +198,6 @@ export default function ProfessorList() {
   
 
 
-
   useEffect(() => {
     const cTypeList = ['Large Undergraduate SE Course (10, 13, 194W)', 'Large Undergraduate Fundamentals', 'Large Undergraduate Health', 'Large Undergraduate Social', 'Large Undergraduate Developmental', 'Large Undergraduate Clinical', 'Small Undergraduate Health', 'Small Undergraduate Social', 'Small Undergraduate Developmental', 'Small Undergraduate Clinical', 'Small Undergraduate SE (Honors, Statistics, etc)', 'SE195', 'SE195W', '196', '290 - 295', 'Graduate Course Affective Science', 'Graduate Course Developmental', 'Graduate Course Health', 'Graduate Course Social', 'Graduate Course General', 'Graduate Course Statistics', 'Other'];
     setC_Type(cTypeList);
@@ -219,10 +206,16 @@ export default function ProfessorList() {
     setC_Name(cNameList);
   }, []);
 
+
   const updateProfList = () => {
     setData(professors);
     setCurrData(true);
     setSavedData(professors);
+
+    console.log(data);
+    console.log(c_name);
+    console.log(c_type);
+
 
     setSortCheck(false);
     setSortTypeVal("");
@@ -243,7 +236,6 @@ export default function ProfessorList() {
                   aria-controls="1-menu"
                   aria-haspopup="true"
                   variant="contained"
-                  color="primary"
                   onClick={handleClick1}
                   endIcon={<ArrowDropDownIcon/>}
                 >
@@ -340,11 +332,11 @@ export default function ProfessorList() {
                 {
                 data.map((row) =>
                 
-                currData 
+                currData && row.course_1
                 ?
                 (
                   <StyledTableRow key={row.name}>
-                    <StyledTableCell component="th" scope="row">
+                    <StyledTableCell  scope="row" >
                       <b>{row.name}</b>
                     </StyledTableCell>
                     <StyledTableCell >{row.email}</StyledTableCell>

@@ -7,10 +7,10 @@
 
  /* Survey and Forms page */
 
-iframe {
-  margin: 20px;
-}
 
+.survey {
+  margin: 30px;
+}
 
 
  /* Professor List page */
@@ -32,6 +32,44 @@ iframe {
   display: inline-block;
 }
 
-.chip {
-  background-color: #0064A4;
+
+
+.Login {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.googleicon {
+  margin: 7px;
+  border-radius: 3px;
+}
+
+
+.orOption {
+  display: inline;
+}
+
+.signinfields {
+  margin-top: 20px;
+}
+
+.Login {
+  padding: 50px;
+}
+
+.hr1 {
+  display: inline-block;
+  width: 25%;
+  margin-right: 20px;
+}
+
+.hr2 {
+  display: inline-block;
+  width: 25%;
+  margin-left: 20px;
+}
+
+
+.loginSuccessful {
+  margin-top: 25px;
 }

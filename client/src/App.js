@@ -1,64 +1,72 @@
 import React from "react";
+
+import firebase from "firebase/app";
+//import { getAuth, signOut } from "firebase/auth";
+
 import "@fontsource/poppins"; 
 import './App.css';
 import Dashboard from './components/Dashboard';
 import SurveyForms from './components/SurveyForms';
 import ProfessorList from './components/ProfessorList';
-
+import CourseSchedules from "./components/CourseSchedules";
+import Login from "./components/Login";
+import Signin from "./components/Signin";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import SettingsIcon from '@material-ui/icons/Settings';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import LogoutIcon from '@material-ui/icons/Logout';
 
 import image from './ucipsych.PNG';
+
 const { useEffect, useState } = React;
 
 
-const drawerWidth = 230;
+const drawerWidth = 200;
 
+const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  appBar: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    backgroundColor: '#0064A4',
-  },
+
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: '#0064A4'
+
   },
   drawerContainer: {
     overflow: 'auto',
     color: 'white',
+    backgroundColor: '#0064A4',
+
   },
   content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
+    flexGrow: 1
+        //padding: theme.spacing(3),
   }
 }));
 
@@ -69,55 +77,106 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
+  const [signinCheck, setsigninCheck] = useState(false);
+
 
   useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        console.log('User is signed in, looking from App.js');
+        setsigninCheck(true);
+
+      } else {
+        // User is signed out
+        console.log('User is signed out or logged out');
+      }
+    });
 
   }, []);
 
 
+
   return (
     <Router>
+      <ThemeProvider theme={theme}>
 
         <div className={classes.root}>
-              <CssBaseline />
-          <AppBar position="fixed" className={classes.appBar} >
+            <CssBaseline />
+          <AppBar position="fixed" sx={{
+              width: { sm: `calc(100% - ${drawerWidth}px)` },
+              ml: { sm: `${drawerWidth}px` },
+              backgroundColor: '#0064A4'
+          }} >
             <Toolbar className='imgToolbar'>
             </Toolbar>
           </AppBar>
           <Drawer
             className={classes.drawer}
             variant="permanent"
+
             classes={{
               paper: classes.drawerPaper,
             }}
+
+            sx={{
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, backgroundColor: '#0064A4'},
+            }}
+
           >
-            <img alt='uci icon' src={image} width='235' height='63' className='uci_icon' />
+            <img alt='uci icon' src={image} width='200' height='63' className='uci_icon' />
  
             <div className={classes.drawerContainer}>
-              <List>
-                <ListItem button key={'Dashboard'} component={Link} to={'/'}>
-                    <ListItemIcon><DashboardIcon style={{fill: "white"}} /></ListItemIcon>
-                    <ListItemText primary='Dashboard' />
-                </ListItem>
-                <ListItem button key={'Surveys and Forms'} component={Link} to={'/surveyforms'}>
+              {
+                signinCheck ?
+
+                <List>
+                  <ListItem button key={'Dashboard'} component={Link} to={'/home'}>
+                      <ListItemIcon><DashboardIcon style={{fill: "white"}} /></ListItemIcon>
+                      <ListItemText primary='Dashboard' />
+                  </ListItem>
+
+                  <ListItem button key={'Surveys and Forms'} component={Link} to={'/surveyforms'}>
                     <ListItemIcon><AssignmentIcon style={{fill: "white"}} /></ListItemIcon>
                     <ListItemText primary='Surveys and Forms' />
                   </ListItem>
+
                   <ListItem button key={'Professors'} component={Link} to={'/professors'}>
                     <ListItemIcon><PeopleIcon style={{fill: "white"}} /></ListItemIcon>
                     <ListItemText primary='Professors' />
                   </ListItem>
 
-              </List>
-              <Divider />
-              <List>
-                {['Settings'].map((text, index) => (
-                  <ListItem button key={text}>
-                    <ListItemIcon >< SettingsIcon style={{fill: "white"}} /></ListItemIcon>
-                    <ListItemText primary={text} />
+                  <ListItem button key={'CourseSchedules'} component={Link} to={'/courseschedules'}>
+                    <ListItemIcon><DateRangeIcon style={{fill: "white"}} /></ListItemIcon>
+                    <ListItemText primary='Course Schedules' />
                   </ListItem>
-                ))}
+
+                  <Divider />
+                  <ListItem button key={'Logout'} 
+                  component={Link} 
+                  to={'/'}
+                  onClick={() => {
+                    firebase.auth().signOut().then(() => {
+                      setsigninCheck(false);
+                      // Sign-out successful.
+                    }).catch((error) => {
+                      // An error happened.
+                    });
+                  }}
+                  >
+                    <ListItemIcon><LogoutIcon style={{fill: "white"}} /></ListItemIcon>
+                    <ListItemText primary='Log Out' />
+
+                  </ListItem>
               </List>
+
+                :
+
+                <List></List>
+
+              }
+
             </div>
           </Drawer>
           <main className={classes.content}>
@@ -127,15 +186,49 @@ export default function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route exact path="/" component={Dashboard}>
+          <Route exact path="/" component={Login}>
           </Route>
-          <Route path="/surveyforms" component={SurveyForms}>
-          </Route>
-          <Route path="/professors" component={ProfessorList}>
-          </Route>
+          {
+            signinCheck ?
+            <Route exact path="/signin" component={Signin}>
+            </Route>
+            :
+            <Redirect to="/" />
+          }
+          {
+            signinCheck ?
+            <Route path="/home" component={Dashboard}>
+            </Route>
+            :
+            <Redirect to="/" />
+          }
+          {
+            signinCheck ?
+            <Route path="/surveyforms" component={SurveyForms}>
+            </Route>
+            :
+            <Redirect to="/" />
+          }
+          {
+            signinCheck ?
+            <Route path="/professors" component={ProfessorList}>
+            </Route>
+            :
+            <Redirect to="/" />
+          }
+          {
+            signinCheck ?
+            <Route path="/courseschedules" component={CourseSchedules}>
+            </Route>
+            :
+            <Redirect to="/" />
+          }
+
         </Switch>
         </main>
       </div>
+      </ThemeProvider>
+
     </Router>
   );
 }
