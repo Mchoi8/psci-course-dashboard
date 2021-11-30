@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import { makeStyles, styled } from '@material-ui/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,6 +12,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import UpdateIcon from '@material-ui/icons/Update';
+import ArticleIcon from '@material-ui/icons/Article';
 
 import { useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase'
@@ -40,7 +43,6 @@ const BootstrapButton = styled(Button)(() => ({
     },
   }
 }));
-
 
 
 // ************************************************
@@ -305,10 +307,7 @@ export default function Dashboard() {
     //setData(professors);
 
     let courses = [];
-    console.log(professors);
-    //console.log(data);
     const curatedLists = getCourseLists(professors);
-    console.log(curatedLists);
 
     if( curatedLists ) {
 
@@ -330,21 +329,61 @@ export default function Dashboard() {
 
     const rankings = getProfessorRankings(professors);
     setProfRankings(rankings);
+
+
+
+  };
+
+
+  const downloadSheet = () => {
+
+    let excelData = [];
+
+
+    for (let key in professorRankings) {
+      let dataObj = {};
+      let keyVal = professorRankings[key];
+
+      dataObj['fall'] = keyVal.fall;
+      dataObj['winter'] = keyVal.winter;
+      dataObj['spring'] = keyVal.spring;
+
+      excelData.push(dataObj);
+       
+    }
+
+
+
+
+
   };
 
 
   return (
     <div className='dashboard'>
       <div className='updateBtnDiv'>
+        <div className='mainBtn'>
 
-      <BootstrapButton onClick={() => updateTheData()} variant="contained" startIcon={<UpdateIcon />}  disableRipple className={classes.margin}>
-        Update Data
-      </BootstrapButton>
+          <BootstrapButton onClick={() => updateTheData()} variant="contained" startIcon={<UpdateIcon />}  disableRipple className={classes.margin}>
+            Update Data
+          </BootstrapButton>
+        </div>
+
+        <div className='mainBtn'>
+            <ReactHTMLTableToExcel 
+              className='table'
+              table='excel-table'
+              filename='dashboard_analysis'
+              sheet='dashboard_table'
+              buttonText='Export to Excel'
+              id='excelbtn'
+            />
+        </div>
 
       </div>
 
       <TableContainer className={classes.table} component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
+        <Table className={classes.table} aria-label="simple table" id='excel-table'>
           <TableHead>
             <TableRow>
               <TableCell >Course Type/ Name</TableCell>
@@ -359,7 +398,6 @@ export default function Dashboard() {
             courses ?
              courses.map((course) => (
                 <TableRow >
-
                   {
                     course.slice(-1) === '8' ?
                       <TableCell key={course} component="th" scope="row" style={{backgroundColor: 'lightgray'}}>
@@ -411,6 +449,10 @@ export default function Dashboard() {
           </TableBody>
         </Table>
       </TableContainer>
+
+
+      
+
     </div>
   );
 

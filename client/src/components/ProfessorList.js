@@ -5,6 +5,7 @@ import { useFirestoreConnect } from 'react-redux-firebase'
 
 import '../App.css';
 
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import { styled, makeStyles, withStyles} from '@material-ui/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,6 +16,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import UpdateIcon from '@material-ui/icons/Update';
+import ArticleIcon from '@material-ui/icons/Article';
+
 
 // Sort Button
 import Menu from '@material-ui/core/Menu';
@@ -75,6 +78,13 @@ const BootstrapButton = styled(Button)(() => ({
     },
   }
 }));
+
+
+
+
+
+
+
 
 const StyledMenu = withStyles({
   paper: {
@@ -227,9 +237,21 @@ export default function ProfessorList() {
         <div className="professors">
 
           <div className='updateBtnDiv'>
-              <BootstrapButton onClick={() => updateProfList()} variant="contained" startIcon={<UpdateIcon />}  disableRipple className={classes.margin}>
-                Update Data
-              </BootstrapButton>
+              <div className='mainBtn'>
+                <BootstrapButton onClick={() => updateProfList()} variant="contained" startIcon={<UpdateIcon />}  disableRipple className={classes.margin}>
+                  Update Data
+                </BootstrapButton>
+              </div>
+
+
+              <div className='mainBtn'>
+
+                <BootstrapButton  variant="contained" startIcon={<ArticleIcon />}  disableRipple  >
+                  Download Sheet
+                </BootstrapButton>
+
+
+              </div>
 
               <div className='sortBtn'>
                 <BootstrapButton
@@ -256,7 +278,7 @@ export default function ProfessorList() {
                   }
 
                 </StyledMenu>
-                </div>
+              </div>
 
                 <div className='sortBtn'>
                 <BootstrapButton
@@ -297,10 +319,22 @@ export default function ProfessorList() {
                     <p></p>
                   }
               </div>
+
+              <div className='mainBtn'>
+                <ReactHTMLTableToExcel 
+                  className='profTable'
+                  table='prof-excel-table'
+                  filename='professor_analysis'
+                  sheet='professor_list'
+                  buttonText='Export to Excel'
+                  id='excelbtn'
+                    />
+              </div>
+
           </div>
     
           <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="customized table">
+            <Table className={classes.table} aria-label="customized table" id='prof-excel-table'>
               <TableHead>
                 <TableRow>
                 <StyledTableCell>Faculty</StyledTableCell>

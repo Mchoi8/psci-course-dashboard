@@ -5,12 +5,73 @@
 
 
 
+/* Dashboard */
+
+
+#excelbtn {
+  background-color: #FFD200;
+  color: black;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  font-size: 16px;
+  padding: 6px 6px;
+  width: 150px;
+  line-height: 1.5;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
+
+
  /* Survey and Forms page */
+
+
+
+ .formresults, .dynamic-form {
+   margin: 15px;
+   margin-bottom: 20px;
+ }
 
 
 .survey {
   margin: 30px;
 }
+
+
+.form {
+  width: 70%;
+  margin: auto;
+  
+}
+
+
+.dynamic-form {
+  width: 60%;
+  margin: auto;
+}
+
+
+
+hr {
+  margin: 25px;
+}
+
+
+.longtext {
+  width: 250px;
+}
+
+
+.submit-btn {
+  width: 15%;
+  margin: 15px;
+}
+
+
+
+
 
 
  /* Professor List page */
@@ -27,11 +88,15 @@
   margin: 25px;
 }
 
-.sortBtn {
+.sortBtn, .mainBtn {
   margin-left: 20px;
   display: inline-block;
 }
 
+
+.dwnldBtn2 {
+  margin-left: 20px;
+}
 
 
 .Login {
