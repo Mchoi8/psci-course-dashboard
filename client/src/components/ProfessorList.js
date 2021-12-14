@@ -243,16 +243,6 @@ export default function ProfessorList() {
                 </BootstrapButton>
               </div>
 
-
-              <div className='mainBtn'>
-
-                <BootstrapButton  variant="contained" startIcon={<ArticleIcon />}  disableRipple  >
-                  Download Sheet
-                </BootstrapButton>
-
-
-              </div>
-
               <div className='sortBtn'>
                 <BootstrapButton
                   aria-controls="1-menu"
